@@ -65,6 +65,7 @@
     }
 
     .line-height-40 {
+      border: none;
       line-height: 40px;
     }
 
@@ -76,38 +77,46 @@
       display: flex;
       justify-content: space-between;
     }
+
     @media screen and (max-width: 800px) {
       .width-88vw {
         width: 88vw
       }
     }
+
     @media screen and (min-width: 1200px) {
       .width-68vw {
         width: 68vw
       }
     }
+
     @media screen and (min-width: 1500px) {
       .width-58vw {
         width: 58vw
       }
     }
-    
+
     .key-title {
       line-height: 33px;
-      margin: 80px auto 0;
+      padding-top: 8.1vh;
+      margin: 0 auto 0;
       color: #409EFF;
       font-weight: bold;
       text-align: center;
     }
+
     .el-collapse {
       border: none;
     }
+
     .el-collapse-item__content {
       font-size: 18px;
     }
+
     .key-title .key {
       font-size: 25px;
     }
+
     .key-title .key-check {
       font-weight: bold;
       text-align: center;
@@ -117,32 +126,48 @@
       border: none;
       border-bottom: 1px solid #ccc;
     }
+
     .key-title .key-check:focus {
       outline: none;
     }
+
     .key-title .page {
-      padding-top: 10px;
+      padding-top: 5px;
       color: #666;
       font-size: 16px;
       float: right;
     }
+
     [v-cloak] {
       display: none;
     }
+
     .el-card__body {
       padding: 0;
       border-radius: 20px;
     }
-    .el-card {
-      margin: 30px auto;
+
+    @media screen and (min-width: 1000px) {
+      .el-card {
+        margin: 3.5vh auto;
+      }
     }
+
+    @media screen and (max-width: 1000px) {
+      .el-card {
+        margin: 3.5vh auto;
+      }
+    }
+
     .el-collapse-item__header {
       font-size: 18px;
       padding: 5px 25px;
     }
+
     .el-collapse-item__wrap {
       padding: 5px 25px 0;
     }
+
     .float-left {
       float: left;
     }
@@ -151,61 +176,124 @@
       font-size: 18px;
       color: #67C23A;
     }
+
     .el-icon-close {
       font-size: 18px;
       color: #F56C6C;
     }
+
     .success {
       color: #67C23A;
     }
+
     .success:focus {
       border-bottom: 1px solid #67C23A;
     }
+
     .danger {
       color: #F56C6C;
     }
+
     .danger:focus {
       border-bottom: 1px solid #F56C6C;
     }
+
     .btn-group {
       margin: 0 auto;
     }
+
     .btn-group button {
       background-color: white;
       border: none;
       box-shadow: 1px 1px 3px #eee;
     }
+
     .el-footer .el-button.is-circle {
       padding: 20px;
+    }
+    @media screen and (min-width: 700px) {
+      .search .el-input__inner {
+        width: 300px;
+      }
+      .grid-con {
+        display: grid;
+        grid-template-columns: 5fr 50px 300px;
+      }
+      .search {
+        display: inline-block;
+      }
+      .sm-search {
+        display: none;
+      }
+      .status {
+        display: inline-block;
+      }
+    }
+    @media screen and (max-width: 700px) {
+      .status {
+        display: none;
+      }
+      .search-bar .search {
+        display: none;
+      }
+      .grid-con {
+        display: grid;
+        grid-template-columns: 1fr 40px 50px;
+      }
+      .sm-search {
+        display: inline-block;
+      }
+    }
+    .sm-search, .more, .edit {
+      border: none;
+    }
+    i.el-icon-close, i.el-icon-check {
+      font-size: 22px;
+      padding-left: 5px;
+    }
+    .overlay {
+      z-index: 0;
+      position: fixed;
+      background-color: rgba(100, 100, 100, 0.5)
     }
   </style>
 </head>
 
 <body>
   <div id="app" v-cloak>
-    <el-row justify="space-between" type="flex">
-      <el-col :span="17" class="px20">
+    <div v-if="!mobile" class="grid-con" class="row-bg" type="flex">
+      <div class="px20">
         <span class="line-height-40">Computer English</span>
-      </el-col>
-      <el-col style="width: 380px;" class="space-between">
-        <i class="el-icon-more line-height-40" @click="toggleAside"></i>
-        <el-input class="search" v-model="search"
-          :placeholder="'共'+allLen+'个'" style="width: 300px;" prefix-icon="el-icon-search"></el-input>
-      </el-col>
-    </el-row>
+      </div>
+      <div>
+        <el-button icon="el-icon-more" circle class="more" @click="toggleAside"></el-button>
+      </div>
+      <div class="search-bar">
+        <el-input class="search" v-if="!mobile" v-model="search" :placeholder="'共'+allLen+'个'"
+          prefix-icon="el-icon-search"
+        ></el-input>
+        <el-button circle @click="searchOnMobile" class="sm-search" icon="el-icon-search"></el-button>
+      </div>
+    </div>
+    <el-input v-if="mobile" class="search" v-model="search" :placeholder="'共'+allLen+'个'"
+      prefix-icon="el-icon-search"
+    ></el-input>
     <el-container>
       <el-container>
         <el-main>
           <div class="key-title width-68vw width-88vw width-58vw">
-            <el-button class="float-left" icon="el-icon-edit" @click="keyShow = !keyShow" circle></el-button>
+            <el-button class="float-left edit" icon="el-icon-edit" @click="keyShow = !keyShow" circle></el-button>
             <span class="key" v-if="keyShow">{{computeSelect.key}}</span>
-            <input :class="['key-check', keyCheckBool ? 'success' : 'danger']" autofocus v-if="!keyShow" v-model="keyCheck" @onkeyup="bindKeyCheck(e)" />
-            <i v-if="!keyShow" :class="keyCheckBool ? 'el-icon-check' : 'el-icon-close'" @click="keyShow = !keyShow"></i>
+            <input :class="['key-check', keyCheckBool ? 'success' : 'danger']" autofocus v-if="!keyShow"
+              v-model="keyCheck" @onkeyup="bindKeyCheck(e)" />
+            <i v-if="!keyShow" :class="[keyCheckBool ? 'el-icon-check' : 'el-icon-close', 'status']"
+              @click="keyShow = !keyShow"></i>
             <span class="page">第{{computeSelect.page}}页</span>
           </div>
           <el-card class="box-card width-68vw width-88vw width-58vw" shadow="hover">
             <el-collapse v-model="activeNames" @change="handleChange">
-              <el-collapse-item class="describe-title" v-for="(val, idx) in collapseList" :key="idx" :title="val.name" :name="(idx + 1).toString()">
+              <el-collapse-item class="describe-title" v-for="(val, idx) in collapseList" :key="idx" :title="val.name"
+                :name="(idx + 1).toString()">
                 {{computeSelect[val.objKey]}}
               </el-collapse-item>
             </el-collapse>
@@ -213,34 +301,48 @@
         </el-main>
         <el-footer>
           <div class="space-between btn-group width-68vw width-88vw width-58vw">
-            <el-button @click="bindBack" icon="el-icon-arrow-left" circle></el-button>
+            <el-button @click="bindBack"
+              
+              icon="el-icon-arrow-left" circle></el-button>
             <el-button @click="random" icon="el-icon-refresh" circle></el-button>
             <el-button @click="bindForward" icon="el-icon-arrow-right" circle></el-button>
           </div>
         </el-footer>
       </el-container>
       <el-aside class="aside" :width="asideWidth+'px'">
-        <el-menu default-active="0" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" :default-active="selectKey"
-          @select="handleSelect">
-          <el-menu-item v-for="({key}, idx) in filterComputer" :key="idx" :index="key">
+        <el-menu default-active="0" id="asideContainer" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose"
+          :default-active="selectKey" @select="handleSelect">
+          <el-menu-item v-for="({key}, idx) in filterComputer" :id="key" :key="idx" :index="key">
             <span slot="title">{{key}}</span>
           </el-menu-item>
         </el-menu>
       </el-aside>
     </el-container>
+    <div class="overlay"></div>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/vue@2.6.0"></script>
   <script src="https://unpkg.com/element-ui@2.12.0/lib/index.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue-scrollto"></script>
   <script src="./data.js"></script>
   <script>
-    function initHeight() {
-      console.log(window.screen.availHeight, document.body.clientHeight)
-      document.querySelector('.aside').style.height = document.documentElement.clientHeight - 40 + 'px'
-    }
-    initHeight()
+    Vue.use(VueScrollTo, {
+      container: "#asideContainer",
+      duration: 500,
+      easing: "ease",
+      offset: 0,
+      force: true,
+      cancelable: true,
+      onStart: false,
+      onDone: false,
+      onCancel: false,
+      x: false,
+      y: true
+    })
     let app = new Vue({
       el: '#app',
       data: {
+        overlay: '',
+        mobile: false, // 当处于移动端时用到
         allLen: '',
         keyCheck: '',
         keyShow: true,
@@ -252,26 +354,30 @@
         collapseList: [{
           name: '术语',
           objKey: 'keyCh'
-        },{
+        }, {
           name: '详解',
           objKey: 'describeCh'
-        },{
+        }, {
           name: 'detailed annotation',
           objKey: 'describe'
         }]
       },
       mounted() {
-        let currentKey = localStorage.getItem('keyIdx', '3D graphics')
+        window.onresize = this.setFooter
+        let currentKey = localStorage.getItem('keyIdx')
+        this.selectKey = currentKey
         this.allLen = this.computer.length
-        document.querySelector('.el-footer').style.height = 200 + 'px'
+        this.setFooter()
+        this.initAside()
+        this.initOverlay()
       },
       computed: {
         filterComputer() {
           try {
-          // console.log(this.computer[0])
-          return this.computer.filter((val, idx) => {
-            return val.key.trim().toLowerCase().indexOf(this.search.toLowerCase()) >= 0
-          })
+            // console.log(this.computer[0])
+            return this.computer.filter((val, idx) => {
+              return val.key.trim().toLowerCase().indexOf(this.search.toLowerCase()) >= 0
+            })
           } catch (error) {
             console.log('filter', error)
           }
@@ -286,7 +392,7 @@
         }
       },
       filters: {
-        
+
       },
       watch: {
         keyCheck(newV, oldV) {
@@ -296,13 +402,56 @@
         }
       },
       methods: {
+        // scrollto
+        onStart() {
+
+        },
+        onDone() {
+
+        },
+        onCancel() {
+
+        },
+
+        scrollToSelect(id) {
+          location.hash = '#' + id
+        },
+        searchOnMobile() {
+          this.overlay.style.zIndex = 2
+          this.mobile = true
+          this.asideWidth = 300
+        },
+        initOverlay() {
+          let overlay = document.querySelector('.overlay')
+          this.overlay = overlay
+          overlay.style.height = document.documentElement.clientHeight + 'px'
+          overlay.style.width = document.documentElement.clientWidth + 'px'
+        },
+        initAside() {
+          console.log(window.screen.availHeight, document.body.clientHeight)
+          document.querySelector('.aside').style.height = document.documentElement.clientHeight - 40 + 'px'
+          if (document.documentElement.clientWidth > 700) {
+            this.asideWidth = 300
+          } else {
+            this.asideWidth = 0
+          }
+        },
+        showAside() {
+          this.asideWidth = 300
+        },
+        setFooter() {
+          if (document.documentElement.clientWidth < 800) {
+            document.querySelector('.el-footer').style.height = 125 + 'px'
+          } else {
+            document.querySelector('.el-footer').style.height = 250 + 'px'
+          }
+        },
         toggleAside() {
           if (this.asideWidth === 300) {
             this.asideWidth = 0
           } else {
             this.asideWidth = 300
           }
-
         },
         handleOpen(key, keyPath) {
           console.log(key, keyPath);
@@ -311,13 +460,18 @@
           console.log(key, keyPath);
         },
         handleSelect(key, keyPath) {
+          this.scrollToSelect()
+          this.mobile = false
           this.keyCheck = ''
           this.selectKey = key
           console.log(this.selectKey)
           localStorage.setItem('keyIdx', key)
+          if (document.documentElement.clientWidth < 700) {
+            this.asideWidth = 0
+          }
         },
         handleChange(val) {
-          
+
         },
         bindKeyCheck(e) {
           console.log('e');
@@ -327,6 +481,7 @@
             if (val.key === this.selectKey) {
               if (idx > 0) {
                 this.selectKey = computer_english[idx - 1].key
+                this.scrollToSelect(this.selectKey)
                 break
               } else {
                 this.$message({
@@ -338,7 +493,7 @@
             }
           }
           this.keyCheck = ''
-          localStorage.setItem('keyIdx', selectKey)
+          localStorage.setItem('keyIdx', this.selectKey)
         },
         bindForward() {
           for (let [idx, val] of computer_english.entries()) {
@@ -346,6 +501,7 @@
               if (idx < computer_english.length - 1) {
                 console.log(idx)
                 this.selectKey = computer_english[idx + 1].key
+                this.scrollToSelect(this.selectKey)
                 break
               } else {
                 this.$message({
@@ -361,7 +517,8 @@
         },
         random() {
           this.keyCheck = ''
-          this.selectKey = computer_english[(parseInt(this.allLen*Math.random()))].key
+          this.selectKey = computer_english[(parseInt(this.allLen * Math.random()))].key
+          this.scrollToSelect(this.selectKey)
           localStorage.setItem('keyIdx', this.selectKey)
         }
       }
