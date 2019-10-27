@@ -176,7 +176,8 @@
       </el-col>
       <el-col style="width: 380px;" class="space-between">
         <i class="el-icon-more line-height-40" @click="toggleAside"></i>
-        <el-input class="search" v-model="search" style="width: 300px;" prefix-icon="el-icon-search"></el-input>
+        <el-input class="search" v-model="search"
+          :placeholder="'共'+allLen+'个'" style="width: 300px;" prefix-icon="el-icon-search"></el-input>
       </el-col>
     </el-row>
     <el-container>
