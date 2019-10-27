@@ -1,12 +1,361 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Document</title>
+  <link rel="stylesheet" href="https://unpkg.com/element-ui@2.12.0/lib/theme-chalk/index.css">
+  <title>计算机英语</title>
+  <style>
+    ::-webkit-scrollbar {
+      width: 10px;
+      height: 10px;
+      background-color: white;
+    }
+
+    .el-row {
+      background-color: white;
+    }
+
+    .el-menu {
+      border: none;
+    }
+
+    /*定义滑块 内阴影+圆角*/
+    ::-webkit-scrollbar-thumb {
+      border-radius: 10px;
+      background-color: #CCC;
+    }
+
+    body {
+      margin: 0;
+    }
+
+    #app .container-fluid {
+      padding: 0;
+      display: flex;
+
+    }
+
+    .el-container {
+      background-color: #f4f4f4;
+    }
+
+    .aside {
+      box-shadow: 1px 1px 10px #eee;
+      background-color: white;
+      transition: width linear 0.3s;
+    }
+
+    .el-input__inner {
+      border-radius: 0;
+      border: none;
+      border-bottom: 1px solid #eee;
+      border-left: 1px solid #eee;
+    }
+
+    .el-input__inner:hover {
+      border-bottom: 1px solid rgba(81, 172, 247, 0.438);
+      border-left: 1px solid #eee;
+    }
+
+    .el-input__inner:focus {
+      border-left: 1px solid #eee;
+    }
+
+    .line-height-40 {
+      line-height: 40px;
+    }
+
+    .px20 {
+      padding: 0 20px;
+    }
+
+    .space-between {
+      display: flex;
+      justify-content: space-between;
+    }
+    .key-title {
+      line-height: 33px;
+      margin: 80px auto 0;
+      width: 58vw;
+      color: #409EFF;
+      font-weight: bold;
+      text-align: center;
+    }
+    .el-collapse {
+      border: none;
+    }
+    .el-collapse-item__content {
+      font-size: 18px;
+    }
+    .key-title .key {
+      font-size: 25px;
+    }
+    .key-title .key-check {
+      font-weight: bold;
+      text-align: center;
+      background-color: #f4f4f4;
+      padding: 0 15px 6px;
+      font-size: 23px;
+      border: none;
+      border-bottom: 1px solid #ccc;
+    }
+    .key-title .key-check:focus {
+      outline: none;
+    }
+    .key-title .page {
+      padding-top: 10px;
+      color: #666;
+      font-size: 16px;
+      float: right;
+    }
+    [v-cloak] {
+      display: none;
+    }
+    .el-card__body {
+      padding: 0;
+      border-radius: 20px;
+    }
+    .el-card {
+      width: 58vw;
+      margin: 30px auto;
+    }
+    .el-collapse-item__header {
+      font-size: 18px;
+      padding: 5px 25px;
+    }
+    .el-collapse-item__wrap {
+      padding: 5px 25px 0;
+    }
+    .float-left {
+      float: left;
+    }
+
+    .el-icon-check {
+      font-size: 18px;
+      color: #67C23A;
+    }
+    .el-icon-close {
+      font-size: 18px;
+      color: #F56C6C;
+    }
+    .success {
+      color: #67C23A;
+    }
+    .success:focus {
+      border-bottom: 1px solid #67C23A;
+    }
+    .danger {
+      color: #F56C6C;
+    }
+    .danger:focus {
+      border-bottom: 1px solid #F56C6C;
+    }
+    .btn-group {
+      margin: 0 auto;
+      width: 58vw;
+    }
+    .btn-group button {
+      background-color: white;
+      border: none;
+      box-shadow: 1px 1px 3px #eee;
+    }
+    .el-button.is-circle {
+      padding: 20px;
+    }
+  </style>
 </head>
+
 <body>
-  h
+  <div id="app" v-cloak>
+    <el-row justify="space-between" type="flex">
+      <el-col :span="17" class="px20">
+        <span class="line-height-40">Computer English</span>
+      </el-col>
+      <el-col style="width: 380px;" class="space-between">
+        <i class="el-icon-more line-height-40" @click="toggleAside"></i>
+        <el-input class="search" v-model="search" style="width: 300px;" prefix-icon="el-icon-search"></el-input>
+      </el-col>
+    </el-row>
+    <el-container>
+      <el-container>
+        <el-main>
+          <div class="key-title">
+            <el-button class="float-left" icon="el-icon-edit" @click="keyShow = !keyShow" circle></el-button>
+            <span class="key" v-if="keyShow">{{computeSelect.key}}</span>
+            <input :class="['key-check', keyCheckBool ? 'success' : 'danger']" autofocus v-if="!keyShow" v-model="keyCheck" @onkeyup="bindKeyCheck(e)" />
+            <i v-if="!keyShow" :class="keyCheckBool ? 'el-icon-check' : 'el-icon-close'"></i>
+            <span class="page">第{{computeSelect.page}}页</span>
+          </div>
+          <el-card class="box-card" shadow="hover">
+            <el-collapse v-model="activeNames" @change="handleChange">
+              <el-collapse-item class="describe-title" v-for="(val, idx) in collapseList" :key="idx" :title="val.name" :name="(idx + 1).toString()">
+                {{computeSelect[val.objKey]}}
+              </el-collapse-item>
+            </el-collapse>
+          </el-card>
+        </el-main>
+        <el-footer>
+          <div class="space-between btn-group">
+            <el-button @click="bindBack" icon="el-icon-arrow-left" circle></el-button>
+            <el-button @click="random" icon="el-icon-refresh" circle></el-button>
+            <el-button @click="bindForward" icon="el-icon-arrow-right" circle></el-button>
+          </div>
+        </el-footer>
+      </el-container>
+      <el-aside class="aside" :width="asideWidth+'px'">
+        <el-menu default-active="0" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" :default-active="selectKey"
+          @select="handleSelect">
+          <el-menu-item v-for="({key}, idx) in filterComputer" :key="idx" :index="key">
+            <span slot="title">{{key}}</span>
+          </el-menu-item>
+        </el-menu>
+      </el-aside>
+    </el-container>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="https://unpkg.com/element-ui@2.12.0/lib/index.js"></script>
+  <script src="./data.js"></script>
+  <script>
+    function initHeight() {
+      console.log(window.screen.availHeight, document.body.clientHeight)
+      document.querySelector('.aside').style.height = document.documentElement.clientHeight - 40 + 'px'
+    }
+    initHeight()
+    let app = new Vue({
+      el: '#app',
+      data: {
+        allLen: '',
+        keyCheck: '',
+        keyShow: true,
+        asideWidth: 300,
+        selectKey: '3D graphics',
+        search: '',
+        computer: computer_english,
+        activeNames: ['1', '2', '3'],
+        collapseList: [{
+          name: '术语',
+          objKey: 'keyCh'
+        },{
+          name: '详解',
+          objKey: 'describeCh'
+        },{
+          name: 'detailed annotation',
+          objKey: 'describe'
+        }]
+      },
+      mounted() {
+        let currentKey = localStorage.getItem('keyIdx', '3D graphics')
+        this.selectKey = currentKey
+        this.allLen = this.computer.length
+        document.querySelector('.el-footer').style.height = 200 + 'px'
+      },
+      computed: {
+        filterComputer() {
+          try {
+          // console.log(this.computer[0])
+          return this.computer.filter((val, idx) => {
+            return val.key.trim().toLowerCase().indexOf(this.search.toLowerCase()) >= 0
+          })
+          } catch (error) {
+            console.log('filter', error)
+          }
+        },
+        keyCheckBool() {
+          return this.selectKey.toLowerCase() === this.keyCheck.toLowerCase()
+        },
+        computeSelect() {
+          return computer_english.filter(val => {
+            return val.key === this.selectKey
+          })[0]
+        }
+      },
+      filters: {
+        
+      },
+      watch: {
+        keyCheck(newV, oldV) {
+          if (newV.toLowerCase() === this.selectKey.toLowerCase()) {
+            console.log('success')
+          }
+        }
+      },
+      methods: {
+        toggleAside() {
+          if (this.asideWidth === 300) {
+            this.asideWidth = 0
+          } else {
+            this.asideWidth = 300
+          }
+
+        },
+        handleOpen(key, keyPath) {
+          console.log(key, keyPath);
+        },
+        handleClose(key, keyPath) {
+          console.log(key, keyPath);
+        },
+        handleSelect(key, keyPath) {
+          this.keyCheck = ''
+          this.selectKey = key
+          console.log(this.selectKey)
+          localStorage.setItem('keyIdx', key)
+        },
+        handleChange(val) {
+          
+        },
+        bindKeyCheck(e) {
+          console.log('e');
+        },
+        bindBack() {
+          for (let [idx, val] of computer_english.entries()) {
+            if (val.key === this.selectKey) {
+              if (idx > 0) {
+                this.selectKey = computer_english[idx - 1].key
+                break
+              } else {
+                this.$message({
+                  message: '已到达第一个关键术语',
+                  type: 'warning'
+                });
+                break
+              }
+            }
+          }
+          this.keyCheck = ''
+          localStorage.setItem('keyIdx', selectKey)
+        },
+        bindForward() {
+          for (let [idx, val] of computer_english.entries()) {
+            if (val.key === this.selectKey) {
+              if (idx < computer_english.length - 1) {
+                console.log(idx)
+                this.selectKey = computer_english[idx + 1].key
+                break
+              } else {
+                this.$message({
+                  message: '已到达最后一个关键术语',
+                  type: 'warning'
+                });
+                break
+              }
+            }
+          }
+          this.keyCheck = ''
+          localStorage.setItem('keyIdx', selectKey)
+        },
+        random() {
+          this.keyCheck = ''
+          this.selectKey = computer_english[(parseInt(this.allLen*Math.random()))].key
+          localStorage.setItem('keyIdx', this.selectKey)
+        }
+      }
+    })
+
+  </script>
 </body>
+
 </html>
