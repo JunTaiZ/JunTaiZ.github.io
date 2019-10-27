@@ -76,10 +76,25 @@
       display: flex;
       justify-content: space-between;
     }
+    @media screen and (max-width: 800px) {
+      .width-88vw {
+        width: 88vw
+      }
+    }
+    @media screen and (min-width: 1200px) {
+      .width-68vw {
+        width: 68vw
+      }
+    }
+    @media screen and (min-width: 1500px) {
+      .width-58vw {
+        width: 58vw
+      }
+    }
+    
     .key-title {
       line-height: 33px;
       margin: 80px auto 0;
-      width: 58vw;
       color: #409EFF;
       font-weight: bold;
       text-align: center;
@@ -119,7 +134,6 @@
       border-radius: 20px;
     }
     .el-card {
-      width: 58vw;
       margin: 30px auto;
     }
     .el-collapse-item__header {
@@ -155,14 +169,13 @@
     }
     .btn-group {
       margin: 0 auto;
-      width: 58vw;
     }
     .btn-group button {
       background-color: white;
       border: none;
       box-shadow: 1px 1px 3px #eee;
     }
-    .el-button.is-circle {
+    .el-footer .el-button.is-circle {
       padding: 20px;
     }
   </style>
@@ -183,14 +196,14 @@
     <el-container>
       <el-container>
         <el-main>
-          <div class="key-title">
+          <div class="key-title width-68vw width-88vw width-58vw">
             <el-button class="float-left" icon="el-icon-edit" @click="keyShow = !keyShow" circle></el-button>
             <span class="key" v-if="keyShow">{{computeSelect.key}}</span>
             <input :class="['key-check', keyCheckBool ? 'success' : 'danger']" autofocus v-if="!keyShow" v-model="keyCheck" @onkeyup="bindKeyCheck(e)" />
-            <i v-if="!keyShow" :class="keyCheckBool ? 'el-icon-check' : 'el-icon-close'"></i>
+            <i v-if="!keyShow" :class="keyCheckBool ? 'el-icon-check' : 'el-icon-close'" @click="keyShow = !keyShow"></i>
             <span class="page">第{{computeSelect.page}}页</span>
           </div>
-          <el-card class="box-card" shadow="hover">
+          <el-card class="box-card width-68vw width-88vw width-58vw" shadow="hover">
             <el-collapse v-model="activeNames" @change="handleChange">
               <el-collapse-item class="describe-title" v-for="(val, idx) in collapseList" :key="idx" :title="val.name" :name="(idx + 1).toString()">
                 {{computeSelect[val.objKey]}}
@@ -199,7 +212,7 @@
           </el-card>
         </el-main>
         <el-footer>
-          <div class="space-between btn-group">
+          <div class="space-between btn-group width-68vw width-88vw width-58vw">
             <el-button @click="bindBack" icon="el-icon-arrow-left" circle></el-button>
             <el-button @click="random" icon="el-icon-refresh" circle></el-button>
             <el-button @click="bindForward" icon="el-icon-arrow-right" circle></el-button>
