@@ -43,9 +43,13 @@
     }
 
     .aside {
+      z-index: 2;
       box-shadow: 1px 1px 10px #eee;
       background-color: white;
       transition: width linear 0.3s;
+    }
+    .aside-mobile {
+      box-shadow: 1px 6px 10px #888;
     }
 
     .el-input__inner {
@@ -324,11 +328,16 @@
       font-size: 22px;
       padding-left: 5px;
     }
-
     .overlay {
-      z-index: 0;
+      z-index: -2;
       position: fixed;
-      background-color: rgba(100, 100, 100, 0.5)
+      transition: background-color ease-in 0.3s;
+    }
+    .overlay-hide {
+      background-color: rgba(100, 100, 100, 0)
+    }
+    .overlay-show {
+      background-color: rgba(100, 100, 100, 0.8)
     }
 
     .toggle-container {
@@ -398,8 +407,11 @@
         <el-button circle @click="searchOnMobile" class="sm-search" icon="el-icon-search"></el-button>
       </div>
     </div>
-    <el-input v-if="mobile" class="search" v-model="search" :placeholder="'共'+allLen+'个, h-已看, u-未看'" autocomplete
-      prefix-icon="el-icon-search"></el-input>
+    <div>
+      <el-input v-if="mobile" class="search" v-model="search" :placeholder="'共'+allLen+'个, h-已看, u-未看'" autocomplete
+        prefix-icon="el-icon-search"
+      ></el-input>
+    </div>
     <el-container>
       <el-container>
         <el-main>
@@ -444,7 +456,7 @@
           </div>
         </el-footer>
       </el-container>
-      <el-aside class="aside" :width="asideWidth+'px'">
+      <el-aside :class="['aside', mobile ? 'aside-mobile' : '']" :width="asideWidth+'px'">
         <el-menu default-active="0" id="asideContainer" class="el-menu-vertical-demo" @open="handleOpen"
           @close="handleClose" :default-active="selectKey" @select="handleSelect">
           <el-menu-item v-for="({key}, idx) in filterComputer" :id="key" :key="idx" :index="key">
@@ -452,8 +464,10 @@
           </el-menu-item>
         </el-menu>
       </el-aside>
+      <div :class="['overlay', this.mobile ? 'overlay-show' : 'overlay-hide']"
+        @click="hideOverlay"
+      ></div>
     </el-container>
-    <div class="overlay"></div>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/vue@2.6.0"></script>
   <script src="https://unpkg.com/element-ui@2.12.0/lib/index.js"></script>
@@ -617,7 +631,7 @@
           location.hash = '#' + id
         },
         searchOnMobile() {
-          this.overlay.style.zIndex = 2
+          this.overlay.style.zIndex = 0
           this.mobile = true
           this.asideWidth = 300
         },
@@ -647,9 +661,17 @@
             localStorage.setItem('un_seen', JSON.stringify(this.un_seen))
           }
         },
+        hideOverlay() {
+          this.mobile = false
+          setTimeout(() => {
+            this.overlay.style.zIndex = -2
+          }, 300);
+          this.toggleAside()
+        },
         initOverlay() {
           let overlay = document.querySelector('.overlay')
           this.overlay = overlay
+          overlay.style.zIndex = -2
           overlay.style.height = document.documentElement.clientHeight + 'px'
           overlay.style.width = document.documentElement.clientWidth + 'px'
         },
@@ -686,6 +708,7 @@
           console.log(key, keyPath);
         },
         handleSelect(key, keyPath) {
+          this.hideOverlay()
           this.mobile = false
           this.keyCheck = ''
           this.selectKey = key
