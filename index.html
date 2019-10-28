@@ -27,7 +27,7 @@
       border-radius: 10px;
       background-color: #CCC;
     }
-
+    
     body {
       margin: 0;
     }
@@ -95,8 +95,10 @@
       }
 
       .key-title {
-
         padding-top: 4.1vh;
+      }
+      .key-title .key-check {
+        width: 88vw;
       }
     }
 
@@ -145,7 +147,7 @@
     }
 
     .key-title {
-      line-height: 33px;
+      line-height: 48px;
       margin: 0 auto 0;
       color: #409EFF;
       font-weight: bold;
@@ -169,7 +171,8 @@
       font-weight: bold;
       text-align: center;
       background-color: #f4f4f4;
-      padding: 0 15px 6px;
+      padding: 5px 0 8px;
+      margin-bottom: 6px;
       font-size: 23px;
       border: none;
       border-bottom: 1px solid #ccc;
@@ -180,7 +183,7 @@
     }
 
     .key-title .page {
-      padding-top: 5px;
+      padding-top: 10px;
       color: #666;
       font-size: 16px;
       float: right;
@@ -262,7 +265,9 @@
     }
 
     .grid-con {
+      height: 50px;
       align-items: center;
+      grid-template-rows: 50px;
     }
 
     @media screen and (min-width: 700px) {
@@ -310,6 +315,7 @@
     .sm-search,
     .more,
     .edit {
+      margin: 8px 0 10px;
       border: none;
     }
 
@@ -398,12 +404,12 @@
       <el-container>
         <el-main>
           <div class="key-title width-68vw width-78vw width-88vw width-58vw">
-            <el-button class="float-left edit" icon="el-icon-edit" @click="keyShow = !keyShow" circle></el-button>
             <span class="key" v-if="keyShow">{{computeSelect.key}}</span>
             <input :class="['key-check', keyCheckBool ? 'success' : 'danger']" autofocus v-if="!keyShow"
               v-model="keyCheck" @onkeyup="bindKeyCheck(e)" />
             <i v-if="!keyShow" :class="[keyCheckBool ? 'el-icon-check' : 'el-icon-close', 'status']"
               @click="keyShow = !keyShow"></i>
+            <el-button class="float-left edit" icon="el-icon-edit" @click="keyShow = !keyShow" circle></el-button>
             <span class="page">第{{computeSelect.page}}页</span>
           </div>
           <el-card class="box-card width-68vw width-78vw width-88vw width-58vw" shadow="hover">
@@ -504,7 +510,7 @@
           name: '术语',
           objKey: 'keyCh'
         }, {
-          name: '详解',
+          name: '中文详解',
           objKey: 'describeCh'
         }, {
           name: '英文详解',
