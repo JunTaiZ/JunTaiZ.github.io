@@ -41,7 +41,6 @@
     .el-container {
       background-color: #f4f4f4;
     }
-
     .aside {
       box-shadow: 1px 1px 10px #eee;
       background-color: white;
@@ -70,9 +69,13 @@
     }
 
     .px20 {
-      padding: 0 20px;
+      padding-left: 20px;
+      padding-right: 20px;
     }
-
+    .py5 {
+      padding-top: 5px;
+      padding-bottom: 5px;
+    }
     .space-between {
       display: flex;
       justify-content: space-between;
@@ -82,11 +85,27 @@
       .width-88vw {
         width: 88vw
       }
+      .key-title {
+        
+        padding-top: 4.1vh;
+      }
     }
-
+    @media screen and (min-width: 800px) {
+      .width-78vw {
+        width: 78vw
+      }
+      .key-title {
+        
+        padding-top: 5.1vh;
+      }
+    }
     @media screen and (min-width: 1200px) {
       .width-68vw {
         width: 68vw
+      }
+      .key-title {
+        
+        padding-top: 6.1vh;
       }
     }
 
@@ -94,11 +113,14 @@
       .width-58vw {
         width: 58vw
       }
+      .key-title {
+        
+        padding-top: 8.1vh;
+      }
     }
 
     .key-title {
       line-height: 33px;
-      padding-top: 8.1vh;
       margin: 0 auto 0;
       color: #409EFF;
       font-weight: bold;
@@ -211,6 +233,9 @@
     .el-footer .el-button.is-circle {
       padding: 20px;
     }
+    .grid-con {
+      align-items: center;
+    }
     @media screen and (min-width: 700px) {
       .search .el-input__inner {
         width: 300px;
@@ -262,26 +287,26 @@
 <body>
   <div id="app" v-cloak>
     <div v-if="!mobile" class="grid-con" class="row-bg" type="flex">
-      <div class="px20">
+      <div class="px20 py5">
         <span class="line-height-40">Computer English</span>
       </div>
       <div>
         <el-button icon="el-icon-more" circle class="more" @click="toggleAside"></el-button>
       </div>
       <div class="search-bar">
-        <el-input class="search" v-if="!mobile" v-model="search" :placeholder="'共'+allLen+'个'"
+        <el-input class="search" v-if="!mobile" v-model="search" :placeholder="'共'+allLen+'个, h-已看, u-未看'"
           prefix-icon="el-icon-search"
         ></el-input>
         <el-button circle @click="searchOnMobile" class="sm-search" icon="el-icon-search"></el-button>
       </div>
     </div>
-    <el-input v-if="mobile" class="search" v-model="search" :placeholder="'共'+allLen+'个'"
+    <el-input v-if="mobile" class="search" v-model="search" :placeholder="'共'+allLen+'个, h-已看, u-未看'" autocomplete
       prefix-icon="el-icon-search"
     ></el-input>
     <el-container>
       <el-container>
         <el-main>
-          <div class="key-title width-68vw width-88vw width-58vw">
+          <div class="key-title width-68vw width-78vw width-88vw width-58vw">
             <el-button class="float-left edit" icon="el-icon-edit" @click="keyShow = !keyShow" circle></el-button>
             <span class="key" v-if="keyShow">{{computeSelect.key}}</span>
             <input :class="['key-check', keyCheckBool ? 'success' : 'danger']" autofocus v-if="!keyShow"
@@ -290,7 +315,7 @@
               @click="keyShow = !keyShow"></i>
             <span class="page">第{{computeSelect.page}}页</span>
           </div>
-          <el-card class="box-card width-68vw width-88vw width-58vw" shadow="hover">
+          <el-card class="box-card width-68vw width-78vw width-88vw width-58vw" shadow="hover">
             <el-collapse v-model="activeNames" @change="handleChange">
               <el-collapse-item class="describe-title" v-for="(val, idx) in collapseList" :key="idx" :title="val.name"
                 :name="(idx + 1).toString()">
@@ -300,7 +325,7 @@
           </el-card>
         </el-main>
         <el-footer>
-          <div class="space-between btn-group width-68vw width-88vw width-58vw">
+          <div class="space-between btn-group width-68vw width-78vw width-88vw width-58vw">
             <el-button @click="bindBack"
               
               icon="el-icon-arrow-left" circle></el-button>
@@ -341,6 +366,8 @@
     let app = new Vue({
       el: '#app',
       data: {
+        history: [],
+        un_seen: [],
         overlay: '',
         mobile: false, // 当处于移动端时用到
         allLen: '',
@@ -365,19 +392,40 @@
       mounted() {
         window.onresize = this.setFooter
         let currentKey = localStorage.getItem('keyIdx')
-        this.selectKey = currentKey
+        console.log(currentKey)
+        this.selectKey = currentKey === null ? '3D graphics' : currentKey
         this.allLen = this.computer.length
         this.setFooter()
         this.initAside()
         this.initOverlay()
+        this.initHistory()
+        setTimeout(() => {
+          
+          this.scrollToSelect(currentKey)
+        }, 20);
       },
       computed: {
         filterComputer() {
           try {
             // console.log(this.computer[0])
-            return this.computer.filter((val, idx) => {
-              return val.key.trim().toLowerCase().indexOf(this.search.toLowerCase()) >= 0
-            })
+            if (this.search.indexOf('h-') === 0) {
+              if (this.history.length > 0) {
+                return this.history.filter((val, idx) => {
+                  return val.key.trim().toLowerCase().indexOf(this.search.toLowerCase().slice(2)) >= 0
+                })
+              }
+            } else if (this.search.indexOf('u-') === 0) {
+              let un_seen = this.un_seen
+              if (un_seen.length > 0) {
+                return un_seen.filter((val, idx) => {
+                  return val.key.trim().toLowerCase().indexOf(this.search.toLowerCase().slice(2)) >= 0
+                })
+              }
+            } else {
+              return this.computer.filter((val, idx) => {
+                return val.key.trim().toLowerCase().indexOf(this.search.toLowerCase()) >= 0
+              })
+            }
           } catch (error) {
             console.log('filter', error)
           }
@@ -402,24 +450,74 @@
         }
       },
       methods: {
-        // scrollto
-        onStart() {
-
+        deleteNull(history) {
+          if (!history[0]) history.shift()
+          return history
         },
-        onDone() {
-
-        },
-        onCancel() {
-
+        checkHistory(key) {
+          let history = this.history
+          let newKey = true
+          let un_seen
+          let newHistory
+          history = this.deleteNull(history)
+          try {
+            for (let val of history) {
+              if (val.key === key) {
+                newKey = false
+              }
+            }
+            // console.log(history);
+            if (newKey) {
+              history.unshift(this.un_seen.filter(val => {
+                return val.key === key
+              })[0])
+              un_seen = this.un_seen.filter(val => {
+                return val.key !== key
+              })
+              this.history = history
+              this.un_seen = un_seen
+              localStorage.setItem('un_seen', JSON.stringify(un_seen))
+              localStorage.setItem('history', JSON.stringify(history))
+            }
+          } catch (error) {
+            console.log('check history', error)
+          }
         },
 
         scrollToSelect(id) {
+          location.hash = ''
           location.hash = '#' + id
         },
         searchOnMobile() {
           this.overlay.style.zIndex = 2
           this.mobile = true
           this.asideWidth = 300
+        },
+        initHistory() {
+          this.history = JSON.parse(localStorage.getItem('history')) ? JSON.parse(localStorage.getItem('history')) : []
+          if (this.history.length > 0) {
+            if (!this.history[0]) {
+              this.history = this.deleteNull(this.history)
+              localStorage.setItem('history', JSON.stringify(this.history))
+            }
+            let haveSeen = false
+            for (let allVal of computer_english) {
+              haveSeen = false
+              for (let his of this.history) {
+                if (allVal.key === his.key) {
+                  haveSeen = true
+                  break
+                }
+              }
+              if (!haveSeen) this.un_seen.push(allVal)
+            }
+            setTimeout(() => {
+              localStorage.setItem('un_seen', JSON.stringify(this.un_seen))
+            }, 20);
+          } else {
+            this.un_seen = computer_english
+            localStorage.setItem('un_seen', JSON.stringify(this.un_seen))
+          }
         },
         initOverlay() {
           let overlay = document.querySelector('.overlay')
@@ -429,7 +527,7 @@
         },
         initAside() {
           console.log(window.screen.availHeight, document.body.clientHeight)
-          document.querySelector('.aside').style.height = document.documentElement.clientHeight - 40 + 'px'
+          document.querySelector('.aside').style.height = document.documentElement.clientHeight - 50 + 'px'
           if (document.documentElement.clientWidth > 700) {
             this.asideWidth = 300
           } else {
@@ -460,10 +558,10 @@
           console.log(key, keyPath);
         },
         handleSelect(key, keyPath) {
-          this.scrollToSelect()
           this.mobile = false
           this.keyCheck = ''
           this.selectKey = key
+          this.checkHistory(key)
           console.log(this.selectKey)
           localStorage.setItem('keyIdx', key)
           if (document.documentElement.clientWidth < 700) {
@@ -482,12 +580,12 @@
               if (idx > 0) {
                 this.selectKey = computer_english[idx - 1].key
                 this.scrollToSelect(this.selectKey)
+                this.checkHistory(this.selectKey)
                 break
               } else {
-                this.$message({
-                  message: '已到达第一个关键术语',
-                  type: 'warning'
-                });
+                this.selectKey = computer_english[this.allLen - 1].key
+                this.scrollToSelect(this.selectKey)
+                this.checkHistory(this.selectKey)
                 break
               }
             }
@@ -502,23 +600,24 @@
                 console.log(idx)
                 this.selectKey = computer_english[idx + 1].key
                 this.scrollToSelect(this.selectKey)
+                this.checkHistory(this.selectKey)
                 break
               } else {
-                this.$message({
-                  message: '已到达最后一个关键术语',
-                  type: 'warning'
-                });
+                this.selectKey = computer_english[0].key
+                this.scrollToSelect(this.selectKey)
+                this.checkHistory(this.selectKey)
                 break
               }
             }
           }
           this.keyCheck = ''
-          localStorage.setItem('keyIdx', selectKey)
+          localStorage.setItem('keyIdx', this.selectKey)
         },
         random() {
           this.keyCheck = ''
           this.selectKey = computer_english[(parseInt(this.allLen * Math.random()))].key
           this.scrollToSelect(this.selectKey)
+          this.checkHistory(this.selectKey)
           localStorage.setItem('keyIdx', this.selectKey)
         }
       }

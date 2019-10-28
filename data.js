@@ -4937,14 +4937,14 @@ let computer_english = [{
     key: 'dot-coms',
     keyCh: 'dot-coms',
     describe: ' A legacy term for companies formed mainly to offer goods and services online.',
-    describeCh: '是主要为在线提供商品和服务而成立的公司的遗留术语。 提供类似类型的商品和服务的公司和行业（例如计算机行业）的',
+    describeCh: '是主要为在线提供商品和服务而成立的公司的遗留术语。',
     page: '525'
   },
   {
     key: 'economic sectors',
     keyCh: '经济部门',
     describe: ' groups of companies and industries, such as the computer industry, that provide similar types of goods and services.',
-    describeCh: '组。',
+    describeCh: '提供类似类型的商品和服务的公司和行业（例如计算机行业）的组。',
     page: '523'
   },
   {
