@@ -401,7 +401,7 @@ let computer_english = [{
     key: 'image resolution',
     keyCh: '图像分辨率图像中',
     describe: ' The number of pixels in an image, usually expressed as horizontal pixels × vertical pixels.',
-    describeCh: '的像素数，通常表示为水平像素×垂直像素。',
+    describeCh: '图像中的像素数，通常表示为水平像素×垂直像素。',
     page: '43'
   },
   {
@@ -604,7 +604,7 @@ let computer_english = [{
     key: 'pixel interpolation',
     keyCh: '像素插值',
     describe: ' A process that is used by graphics software to average the color of adjacent pixels in an image, usually when the image is enlarged.',
-    describeCh: '：通常在图像放大时，图形软件使用该过程对图像中相邻像素的颜色求平均的过程。',
+    describeCh: '通常在图像放大时，图形软件使用该过程对图像中相邻像素的颜色求平均的过程。',
     page: '43'
   },
   {
@@ -3739,7 +3739,7 @@ let computer_english = [{
   {
     key: 'function',
     keyCh: '功能',
-    describe: ' (1) In the context of spreadsheet software, a built-in formula for making a calculation.',
+    describe: ' (1) In the context of spreadsheet software, a built-in formula for making a calculation.'+'\n'+'(2) In the context of programming, a section of code that manipulates data, but is not included in the main sequential execution path of a program.',
     describeCh: '（1）在电子表格软件的上下文中，是用于进行计算的内置公式。（2）在编程的上下文中，是一段代码，用于操纵数据，但不包含在程序的主要顺序执行路径中。',
     page: '421'
   },
@@ -3789,7 +3789,7 @@ let computer_english = [{
     key: 'kernel',
     keyCh: '内核操作系统',
     describe: ' The core module of an operating system that typically manages memory, processes, tasks, and storage devices.',
-    describeCh: '的核心模块，通常管理内存，进程，任务和存储设备。',
+    describeCh: '操作系统的核心模块，通常管理内存，进程，任务和存储设备。',
     page: '391'
   },
   {
@@ -4173,7 +4173,7 @@ let computer_english = [{
   {
     key: 'system requirements',
     keyCh: '系统要求',
-    describe: ' (1) The minimum hardware and operating system specifications required for a software application to operate correctly.',
+    describe: ' (1) The minimum hardware and operating system specifications required for a software application to operate correctly.'+ '\n'+'(2) Criteria for developing a successful information system, which are typically compiled into a system requirements report at the conclusion of the SDLC analysis phase. ',
     describeCh: '（1）软件应用程序正常运行所需的最低硬件和操作系统规格。（2）开发成功的信息系统的标准，通常在SDLC分析阶段结束时将其汇编成系统需求报告。',
     page: '382'
   },
