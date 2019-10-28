@@ -41,6 +41,7 @@
     .el-container {
       background-color: #f4f4f4;
     }
+
     .aside {
       box-shadow: 1px 1px 10px #eee;
       background-color: white;
@@ -73,39 +74,61 @@
       padding-left: 20px;
       padding-right: 20px;
     }
+
     .py5 {
       padding-top: 5px;
       padding-bottom: 5px;
     }
+
     .space-between {
       display: flex;
       justify-content: space-between;
     }
+    .space-around {
+      display: flex;
+      justify-content: space-around;
+    }
 
-    @media screen and (max-width: 800px) {
+    @media screen and (max-width: 700px) {
       .width-88vw {
         width: 88vw
       }
+
       .key-title {
-        
+
         padding-top: 4.1vh;
       }
     }
-    @media screen and (min-width: 800px) {
-      .width-78vw {
-        width: 78vw
-      }
+
+    @media screen and (min-width: 700px) {
+
+      /* .width-68vw {
+        width: 68vw
+      } */
       .key-title {
-        
+
         padding-top: 5.1vh;
       }
     }
+
+    @media screen and (min-width: 1000px) {
+      .width-58vw {
+        width: 58vw
+      }
+
+      .key-title {
+
+        padding-top: 5.1vh;
+      }
+    }
+
     @media screen and (min-width: 1200px) {
       .width-68vw {
         width: 68vw
       }
+
       .key-title {
-        
+
         padding-top: 6.1vh;
       }
     }
@@ -114,8 +137,9 @@
       .width-58vw {
         width: 58vw
       }
+
       .key-title {
-        
+
         padding-top: 8.1vh;
       }
     }
@@ -133,6 +157,7 @@
     }
 
     .el-collapse-item__content {
+      text-align: justify;
       font-size: 18px;
     }
 
@@ -183,8 +208,9 @@
     }
 
     .el-collapse-item__header {
+      color: #555;
       font-size: 18px;
-      padding: 5px 25px;
+      padding: 2px 15px;
     }
 
     .el-collapse-item__wrap {
@@ -234,56 +260,122 @@
     .el-footer .el-button.is-circle {
       padding: 20px;
     }
+
     .grid-con {
       align-items: center;
     }
+
     @media screen and (min-width: 700px) {
       .search .el-input__inner {
         width: 300px;
       }
+
       .grid-con {
         display: grid;
         grid-template-columns: 5fr 50px 300px;
       }
+
       .search {
         display: inline-block;
       }
+
       .sm-search {
         display: none;
       }
+
       .status {
         display: inline-block;
       }
     }
+
     @media screen and (max-width: 700px) {
       .status {
         display: none;
       }
+
       .search-bar .search {
         display: none;
       }
+
       .grid-con {
         display: grid;
         grid-template-columns: 1fr 40px 50px;
       }
+
       .sm-search {
         display: inline-block;
       }
     }
-    .sm-search, .more, .edit {
+
+    .sm-search,
+    .more,
+    .edit {
       border: none;
     }
-    i.el-icon-close, i.el-icon-check {
+
+    i.el-icon-close,
+    i.el-icon-check {
       font-size: 22px;
       padding-left: 5px;
     }
+
     .overlay {
       z-index: 0;
       position: fixed;
       background-color: rgba(100, 100, 100, 0.5)
     }
+
+    .toggle-container {
+      font-size: 18px;
+      background-color: white;
+    }
+    .toggle-container:nth-child(n+2) {
+      border-top: 1px solid #EEE;
+    }
+
+    .hide,
+    .show {
+      padding: 20px;
+    }
+
+    .grid-toggle {
+      display: grid;
+      grid-template-columns: 1fr;
+      align-items: center;
+    }
+
+    [class^=icon] {
+      font-size: 16px;
+      color: #666;
+    }
   </style>
 </head>
+
+<template id="showSelectCon">
+  <div class="toggle-container" @click="toggle">
+    <el-collapse-transition>
+      <div v-show="toggleBool" class="grid-toggle">
+        <div class="show" ref="show">
+          <slot name="container1"></slot>
+        </div>
+        <div v-if="toggleBool" class="icon">
+
+          <slot name="icon2"></slot>
+        </div>
+      </div>
+    </el-collapse-transition>
+    <el-collapse-transition>
+      <div class="grid-toggle" v-show="!toggleBool">
+        <div class="hide" ref="hide">
+          <slot name="container2"></slot>
+        </div>
+        <div v-if="!toggleBool" class="icon">
+          <slot name="icon1"></slot>
+        </div>
+      </div>
+    </el-collapse-transition>
+  </div>
+</template>
 
 <body>
   <div id="app" v-cloak>
@@ -296,14 +388,12 @@
       </div>
       <div class="search-bar">
         <el-input class="search" v-if="!mobile" v-model="search" :placeholder="'共'+allLen+'个, h-已看, u-未看'"
-          prefix-icon="el-icon-search"
-        ></el-input>
+          prefix-icon="el-icon-search"></el-input>
         <el-button circle @click="searchOnMobile" class="sm-search" icon="el-icon-search"></el-button>
       </div>
     </div>
     <el-input v-if="mobile" class="search" v-model="search" :placeholder="'共'+allLen+'个, h-已看, u-未看'" autocomplete
-      prefix-icon="el-icon-search"
-    ></el-input>
+      prefix-icon="el-icon-search"></el-input>
     <el-container>
       <el-container>
         <el-main>
@@ -317,27 +407,40 @@
             <span class="page">第{{computeSelect.page}}页</span>
           </div>
           <el-card class="box-card width-68vw width-78vw width-88vw width-58vw" shadow="hover">
-            <el-collapse v-model="activeNames" @change="handleChange">
+            <!-- <el-collapse v-model="activeNames" @change="handleChange">
               <el-collapse-item class="describe-title" v-for="(val, idx) in collapseList" :key="idx" :title="val.name"
                 :name="(idx + 1).toString()">
                 {{computeSelect[val.objKey]}}
               </el-collapse-item>
-            </el-collapse>
+            </el-collapse> -->
+
+            <toggle-con v-for="(val, idx) in collapseList" :key="idx">
+              <template v-slot:container1>
+                <div>{{val.name}}</div>
+              </template>
+              <template v-slot:container2>
+                <div>{{computeSelect[val.objKey]}}</div>
+              </template>
+              <template v-slot:icon1>
+                <!-- <i class="el-icon-caret-top"></i> -->
+              </template>
+              <template v-slot:icon2>
+                <!-- <i class="el-icon-caret-bottom"></i> -->
+              </template>
+            </toggle-con>
           </el-card>
         </el-main>
         <el-footer>
-          <div class="space-between btn-group width-68vw width-78vw width-88vw width-58vw">
-            <el-button @click="bindBack"
-              
-              icon="el-icon-arrow-left" circle></el-button>
+          <div class="space-around btn-group width-68vw width-78vw width-88vw width-58vw">
+            <el-button @click="bindBack" icon="el-icon-arrow-left" circle></el-button>
             <el-button @click="random" icon="el-icon-refresh" circle></el-button>
             <el-button @click="bindForward" icon="el-icon-arrow-right" circle></el-button>
           </div>
         </el-footer>
       </el-container>
       <el-aside class="aside" :width="asideWidth+'px'">
-        <el-menu default-active="0" id="asideContainer" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose"
-          :default-active="selectKey" @select="handleSelect">
+        <el-menu default-active="0" id="asideContainer" class="el-menu-vertical-demo" @open="handleOpen"
+          @close="handleClose" :default-active="selectKey" @select="handleSelect">
           <el-menu-item v-for="({key}, idx) in filterComputer" :id="key" :key="idx" :index="key">
             <span slot="title">{{key}}</span>
           </el-menu-item>
@@ -348,9 +451,12 @@
   </div>
   <script src="https://cdn.jsdelivr.net/npm/vue@2.6.0"></script>
   <script src="https://unpkg.com/element-ui@2.12.0/lib/index.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/vue-scrollto"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue-scrollto"></script>
   <script src="./data.js"></script>
   <script>
+    // Vue.component('toggle-con', {
+
+    // })
     Vue.use(VueScrollTo, {
       container: "#asideContainer",
       duration: 500,
@@ -366,6 +472,21 @@
     })
     let app = new Vue({
       el: '#app',
+      components: {
+        toggleCon: {
+          template: '#showSelectCon',
+          data() {
+            return {
+              toggleBool: true
+            }
+          },
+          methods: {
+            toggle() {
+              this.toggleBool = !this.toggleBool
+            }
+          }
+        }
+      },
       data: {
         history: [],
         un_seen: [],
@@ -386,7 +507,7 @@
           name: '详解',
           objKey: 'describeCh'
         }, {
-          name: 'detailed annotation',
+          name: '英文详解',
           objKey: 'describe'
         }]
       },
@@ -401,7 +522,7 @@
         this.initOverlay()
         this.initHistory()
         setTimeout(() => {
-          
+
           this.scrollToSelect(currentKey)
         }, 20);
       },
@@ -565,7 +686,7 @@
           this.checkHistory(key)
           console.log(this.selectKey)
           localStorage.setItem('keyIdx', key)
-          if (document.documentElement.clientWidth < 700) {
+          if (document.documentElement.clientWidth < 800) {
             this.asideWidth = 0
           }
         },
