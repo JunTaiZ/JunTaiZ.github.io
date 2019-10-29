@@ -301,7 +301,9 @@
       .status {
         display: none;
       }
-
+      .more {
+        display: none;
+      }
       .search-bar .search {
         display: none;
       }
@@ -315,7 +317,9 @@
         display: inline-block;
       }
     }
-
+    .edit {
+      transition: float ease 0.3s;
+    }
     .sm-search,
     .more,
     .edit {
@@ -450,9 +454,9 @@
         </el-main>
         <el-footer>
           <div class="space-around btn-group width-68vw width-78vw width-88vw width-58vw">
-            <el-button @click="bindBack" icon="el-icon-arrow-left" circle></el-button>
+            <el-button @click="bindBack" class="key-back" @keyup.37="bindBack" icon="el-icon-arrow-left" circle></el-button>
             <el-button @click="random" icon="el-icon-refresh" circle></el-button>
-            <el-button @click="bindForward" icon="el-icon-arrow-right" circle></el-button>
+            <el-button @click="bindForward" class="key-forward" @keyup.39="bindForward" icon="el-icon-arrow-right" circle></el-button>
           </div>
         </el-footer>
       </el-container>
@@ -532,6 +536,11 @@
         }]
       },
       mounted() {
+        document.querySelector('body').onkeyup = (e) => {
+          if (e.keyCode === 37) this.bindBack()
+          if (e.keyCode === 39) this.bindForward()
+        }
+
         window.onresize = this.setFooter
         let currentKey = localStorage.getItem('keyIdx')
         console.log(currentKey)
@@ -708,7 +717,6 @@
           console.log(key, keyPath);
         },
         handleSelect(key, keyPath) {
-          this.hideOverlay()
           this.mobile = false
           this.keyCheck = ''
           this.selectKey = key
@@ -716,6 +724,7 @@
           console.log(this.selectKey)
           localStorage.setItem('keyIdx', key)
           if (document.documentElement.clientWidth < 800) {
+            this.hideOverlay()
             this.asideWidth = 0
           }
         },
