@@ -406,7 +406,7 @@
         <el-button icon="el-icon-more" circle class="more" @click="toggleAside"></el-button>
       </div>
       <div class="search-bar">
-        <el-input class="search" v-if="!mobile" v-model="search" :placeholder="'共'+allLen+'个, h-已看, u-未看'"
+        <el-input @focus="focusOnSearch" class="search" v-if="!mobile" v-model="search" :placeholder="'共'+allLen+'个, h-已看, u-未看'"
           prefix-icon="el-icon-search"></el-input>
         <el-button circle @click="searchOnMobile" class="sm-search" icon="el-icon-search"></el-button>
       </div>
@@ -601,6 +601,9 @@
         }
       },
       methods: {
+        focusOnSearch() {
+          this.asideWidth = 300
+        },
         deleteNull(history) {
           if (!history[0]) history.shift()
           return history
