@@ -276,12 +276,12 @@
 
     @media screen and (min-width: 700px) {
       .search .el-input__inner {
-        width: 300px;
+        width: 360px;
       }
 
       .grid-con {
         display: grid;
-        grid-template-columns: 5fr 50px 300px;
+        grid-template-columns: 5fr 50px 360px;
       }
 
       .search {
@@ -519,7 +519,7 @@
         allLen: '',
         keyCheck: '',
         keyShow: true,
-        asideWidth: 300,
+        asideWidth: 360,
         selectKey: '3D graphics',
         search: '',
         computer: computer_english,
@@ -602,7 +602,7 @@
       },
       methods: {
         focusOnSearch() {
-          this.asideWidth = 300
+          this.asideWidth = 360
         },
         deleteNull(history) {
           if (!history[0]) history.shift()
@@ -645,7 +645,7 @@
         searchOnMobile() {
           this.overlay.style.zIndex = 0
           this.mobile = true
-          this.asideWidth = 300
+          this.asideWidth = 360
         },
         initHistory() {
           this.history = JSON.parse(localStorage.getItem('history')) ? JSON.parse(localStorage.getItem('history')) : []
@@ -691,13 +691,13 @@
           console.log(window.screen.availHeight, document.body.clientHeight)
           document.querySelector('.aside').style.height = document.documentElement.clientHeight - 50 + 'px'
           if (document.documentElement.clientWidth > 700) {
-            this.asideWidth = 300
+            this.asideWidth = 360
           } else {
             this.asideWidth = 0
           }
         },
         showAside() {
-          this.asideWidth = 300
+          this.asideWidth = 360
         },
         setFooter() {
           if (document.documentElement.clientWidth < 800) {
@@ -707,10 +707,10 @@
           }
         },
         toggleAside() {
-          if (this.asideWidth === 300) {
+          if (this.asideWidth === 360) {
             this.asideWidth = 0
           } else {
-            this.asideWidth = 300
+            this.asideWidth = 360
           }
         },
         handleOpen(key, keyPath) {
