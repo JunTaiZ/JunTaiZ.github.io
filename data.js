@@ -1786,9 +1786,9 @@ let computer_english = [{
   {
     key: 'communication port',
     keyCh: '通讯端口',
-    describe: '.',
-    describeCh: '。',
-    page: 'FTP, 110'
+    describe: 'In the context of computer networks, a virtual location for data that arrives or leaves the device; common ports include 21 for FTP.',
+    describeCh: '在计算机网络环境中，到达或离开设备的数据的虚拟位置；常用端口包括用于ftp的21端口。',
+    page: '110'
   },
   {
     key: 'communication protocol',
